@@ -13,3 +13,7 @@ module.exports = {
   proseWrap: "always",
   endOfLine: "lf",
 };
+module.exports = {
+  tailwindConfig: "./tailwind.config.js",
+  //...
+};
