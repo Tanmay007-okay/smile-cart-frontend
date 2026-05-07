@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 
-import axios from "axios";
+import productsApi from "apis/products";
 import { Spinner, Typography } from "neetoui";
 import { isNotNil, append } from "ramda";
 
 import Carousel from "./Carousel";
+// Bring in the Procurement Department!
 
 const Product = () => {
   // 1. Set up our state variables
@@ -14,14 +15,12 @@ const Product = () => {
   // 2. The function that talks to the backend
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(
-        "https://smile-cart-backend-staging.neetodeployapp.com/products/infinix-inbook-2"
-      );
+      // Instead of axios.get("http..."), we just call our clean API method!
+      const response = await productsApi.show();
       setProduct(response.data);
     } catch (error) {
       console.log("An error occurred:", error);
     } finally {
-      // Whether it succeeds or fails, stop loading!
       setIsLoading(false);
     }
   };
