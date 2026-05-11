@@ -1,31 +1,20 @@
-import { Route, Switch, NavLink } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
-// Import our three "buildings" (components)
-import Home from "./components/Home";
-import PageNotFound from "./components/PageNotFound";
+import { PageNotFound } from "./components/Commons";
 import Product from "./components/Product";
+import ProductList from "./components/ProductList";
 
 const App = () => (
-  <>
-    {/* 1. THE NAVIGATION BAR */}
-    <div className="mx-4 mt-4 flex space-x-2">
-      <NavLink exact activeClassName="underline font-bold" to="/">
-        Home
-      </NavLink>
-      <NavLink exact activeClassName="underline font-bold" to="/product">
-        Product
-      </NavLink>
-    </div>
-    {/* 2. THE ROUTER DISPLAY CASE */}
-    <Switch>
-      {/* If the URL is exactly "/", show the Home component */}
-      <Route exact component={Home} path="/" />
-      {/* If the URL is exactly "/product", show the Product component */}
-      <Route exact component={Product} path="/product" />
-      {/* If the URL is ANYTHING ELSE (*), show the Error Page */}
-      <Route component={PageNotFound} path="*" />
-    </Switch>
-  </>
+  <Switch>
+    {/* The Catalog */}
+    <Route exact component={ProductList} path="/products" />
+    {/* The Dynamic Route for a Specific Item */}
+    <Route exact component={Product} path="/products/:slug" />
+    {/* If they go to the root "/", automatically send them to the catalog */}
+    <Redirect exact from="/" to="/products" />
+    {/* The Fallback */}
+    <Route component={PageNotFound} path="*" />
+  </Switch>
 );
 
 export default App;

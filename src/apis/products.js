@@ -1,8 +1,11 @@
 import axios from "axios";
 
-// Look how clean this is now!
-const show = () => axios.get("products/infinix-inbook-2");
+// 1. Get all products
+const fetch = () => axios.get("products");
 
-const productsApi = { show };
+// 2. Get a specific product by its slug
+const show = (slug) => axios.get(`products/${slug}`);
+
+const productsApi = { show, fetch };
 
 export default productsApi;

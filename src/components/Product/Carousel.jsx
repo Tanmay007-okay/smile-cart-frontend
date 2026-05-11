@@ -35,6 +35,7 @@ const Carousel = ({ imageUrls, title }) => {
 
     // Clean up when leaving the page
     return () => clearInterval(timerRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
