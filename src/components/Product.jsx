@@ -16,8 +16,8 @@ const Product = () => {
   const fetchProduct = async () => {
     try {
       // Instead of axios.get("http..."), we just call our clean API method!
-      const response = await productsApi.show();
-      setProduct(response.data);
+      const product = await productsApi.show();
+      setProduct(product);
     } catch (error) {
       console.log("An error occurred:", error);
     } finally {
@@ -40,14 +40,8 @@ const Product = () => {
   }
 
   // 5. Destructure the data (and rename the snake_case variables to camelCase)
-  const {
-    name,
-    description,
-    mrp,
-    offer_price: offerPrice,
-    image_urls: imageUrls,
-    image_url: imageUrl,
-  } = product;
+
+  const { name, description, mrp, offerPrice, imageUrls, imageUrl } = product;
 
   // Calculate the discount
   const totalDiscounts = mrp - offerPrice;
