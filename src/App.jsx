@@ -1,7 +1,7 @@
 import { Route, Switch, Redirect } from "react-router-dom";
 import routes from "routes"; // <-- Import the dictionary
 
-import { PageNotFound } from "./components/commons";
+import { PageNotFound } from "./components/Commons";
 import Product from "./components/Product";
 import ProductList from "./components/ProductList";
 
