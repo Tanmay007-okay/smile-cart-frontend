@@ -1,19 +1,15 @@
-import { useContext } from "react"; // 1. Import useContext
-
 import { LeftArrow } from "neetoicons";
 import { Typography } from "neetoui";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useHistory } from "react-router-dom";
+// 1. Swap Context for Zustand
+import useCartItemsStore from "stores/useCartItemsStore";
 
-import CartItemsContext from "../../contexts/CartItemsContext"; // 2. Import the Context
-
-// 3. Remove cartItemsCount from the props list
 const Header = ({ title, shouldShowBackButton = true, actionBlock }) => {
   const history = useHistory();
 
-  // 4. Read the array directly from the global state!
-  const [cartItems] = useContext(CartItemsContext);
-  const cartItemsCount = cartItems.length;
+  // 2. Use the Selector to grab exactly what we need
+  const cartItemsCount = useCartItemsStore((store) => store.cartItems.length);
 
   return (
     <div className="m-2">
