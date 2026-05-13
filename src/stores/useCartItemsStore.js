@@ -1,5 +1,5 @@
 import { isNotEmpty } from "neetocist";
-import { assoc, dissoc } from "ramda";
+import { assoc, dissoc, evolve } from "ramda"; // Add evolve here
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -13,9 +13,10 @@ const useCartItemsStore = create(
             return { cartItems: dissoc(slug, cartItems) };
           }
 
-          // The linter wants a blank line right above this return!
           return { cartItems: assoc(slug, String(quantity), cartItems) };
         }),
+      // Add this new function!
+      removeCartItem: (slug) => set(evolve({ cartItems: dissoc(slug) })),
     }),
     { name: "cart-items-store" }
   )

@@ -2,8 +2,9 @@ import { LeftArrow } from "neetoicons";
 import { Typography } from "neetoui";
 import { keys } from "ramda";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { useHistory } from "react-router-dom";
 // 1. Swap Context for Zustand
+import { useHistory, Link } from "react-router-dom";
+import routes from "routes";
 import useCartItemsStore from "stores/useCartItemsStore";
 
 const Header = ({ title, shouldShowBackButton = true, actionBlock }) => {
@@ -31,15 +32,14 @@ const Header = ({ title, shouldShowBackButton = true, actionBlock }) => {
         {/* 3. Render the Search Bar AND the Cart Icon */}
         <div className="flex items-end space-x-4">
           {actionBlock}
-          <div className="flex flex-col">
-            {/* Only show the badge if they actually have items! */}
+          <Link className="flex flex-col items-center" to={routes.cart}>
             {cartItemsCount > 0 && (
               <span className="neeto-ui-border-black neeto-ui-rounded-full min-w-fit flex h-5 w-5 items-center justify-center self-end border bg-white p-1 text-xs font-bold">
                 {cartItemsCount}
               </span>
             )}
             <AiOutlineShoppingCart size="2rem" />
-          </div>
+          </Link>
         </div>
       </div>
       <hr className="neeto-ui-bg-black mt-2 h-1" />

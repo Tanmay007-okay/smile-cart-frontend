@@ -5,9 +5,11 @@ import productsApi from "apis/products";
 import { Header, PageLoader, PageNotFound } from "components/Commons";
 // import { AddToCart } from "components/Commons";
 import AddToCart from "components/Commons/AddToCart";
-import { Typography } from "neetoui";
+import useSelectedQuantity from "components/hooks/useSelectedQuantity";
+import { Button, Typography } from "neetoui";
 import { isNotNil, append } from "ramda";
 import { useParams } from "react-router-dom"; // 1. Import useParams to read the URL
+import routes from "routes";
 
 import Carousel from "./Carousel";
 
@@ -20,7 +22,7 @@ const Product = () => {
 
   // 4. Extract the dynamic slug from the address bar (e.g., "infinix-inbook-2")
   const { slug } = useParams();
-
+  const { selectedQuantity, setSelectedQuantity } = useSelectedQuantity(slug);
   const fetchProduct = async () => {
     try {
       // 5. Pass that slug directly to our API Mailroom!
@@ -45,7 +47,15 @@ const Product = () => {
   if (isError) return <PageNotFound />;
 
   // Destructure the data now that we know it successfully loaded
-  const { name, description, mrp, offerPrice, imageUrls, imageUrl } = product;
+  const {
+    name,
+    description,
+    mrp,
+    offerPrice,
+    imageUrls,
+    imageUrl,
+    availableQuantity,
+  } = product;
   const totalDiscounts = mrp - offerPrice;
   const discountPercentage = ((totalDiscounts / mrp) * 100).toFixed(1);
 
@@ -72,7 +82,16 @@ const Product = () => {
           <Typography className="font-semibold text-green-600">
             {discountPercentage}% off
           </Typography>
-          <AddToCart slug={slug} />
+          <div className="flex space-x-10">
+            <AddToCart availableQuantity={availableQuantity} slug={slug} />
+            <Button
+              className="bg-neutral-800 hover:bg-neutral-950"
+              label="Buy now"
+              size="large"
+              to={routes.checkout}
+              onClick={() => setSelectedQuantity(selectedQuantity || 1)}
+            />
+          </div>
         </div>
       </div>
     </div>
