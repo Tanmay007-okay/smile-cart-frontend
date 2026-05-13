@@ -1,20 +1,24 @@
-import { without } from "ramda";
+import { isNotEmpty } from "neetocist";
+import { assoc, dissoc } from "ramda";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-// `set` is Zustand's built-in tool to update the state
-const useCartItemsStore = create((set) => ({
-  cartItems: [],
+const useCartItemsStore = create(
+  persist(
+    (set) => ({
+      cartItems: {},
+      setSelectedQuantity: (slug, quantity) =>
+        set(({ cartItems }) => {
+          if (quantity <= 0 && isNotEmpty(quantity)) {
+            return { cartItems: dissoc(slug, cartItems) };
+          }
 
-  toggleIsInCart: (slug) =>
-    set(({ cartItems }) => {
-      // If it's already in the cart, remove it
-      if (cartItems.includes(slug)) {
-        return { cartItems: without([slug], cartItems) };
-      }
-
-      // Otherwise, add it
-      return { cartItems: [slug, ...cartItems] };
+          // The linter wants a blank line right above this return!
+          return { cartItems: assoc(slug, String(quantity), cartItems) };
+        }),
     }),
-}));
+    { name: "cart-items-store" }
+  )
+);
 
 export default useCartItemsStore;

@@ -1,32 +1,25 @@
+import useSelectedQuantity from "components/hooks/useSelectedQuantity";
 import { Button } from "neetoui";
-// 1. Import Zustand and the shallow comparator
-import useCartItemsStore from "stores/useCartItemsStore";
-import { shallow } from "zustand/shallow";
+import { isNil } from "ramda";
 
-const AddToCart = ({ slug }) => {
-  // 2. Use the Selector and pass `shallow` as the second argument
-  const { isInCart, toggleIsInCart } = useCartItemsStore(
-    (store) => ({
-      isInCart: store.cartItems.includes(slug),
-      toggleIsInCart: store.toggleIsInCart,
-    }),
-    shallow
-  );
+import ProductQuantity from "./ProductQuantity";
+
+const AddToCart = ({ slug, availableQuantity }) => {
+  const { selectedQuantity, setSelectedQuantity } = useSelectedQuantity(slug);
 
   const handleClick = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    toggleIsInCart(slug); // We now pass the slug directly into the store's function
+    setSelectedQuantity(1); // Set initial quantity to 1
   };
 
-  return (
-    <Button
-      className="mt-4"
-      label={isInCart ? "Remove from cart" : "Add to cart"}
-      size="large"
-      onClick={handleClick}
-    />
-  );
+  // If it's not in the cart, show the standard button
+  if (isNil(selectedQuantity)) {
+    return <Button label="Add to cart" size="large" onClick={handleClick} />;
+  }
+
+  // If it IS in the cart, render the +/- counter!
+  return <ProductQuantity availableQuantity={availableQuantity} slug={slug} />;
 };
 
 export default AddToCart;

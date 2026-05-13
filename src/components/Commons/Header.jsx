@@ -1,5 +1,6 @@
 import { LeftArrow } from "neetoicons";
 import { Typography } from "neetoui";
+import { keys } from "ramda";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useHistory } from "react-router-dom";
 // 1. Swap Context for Zustand
@@ -9,7 +10,9 @@ const Header = ({ title, shouldShowBackButton = true, actionBlock }) => {
   const history = useHistory();
 
   // 2. Use the Selector to grab exactly what we need
-  const cartItemsCount = useCartItemsStore((store) => store.cartItems.length);
+  const cartItemsCount = useCartItemsStore(
+    (store) => keys(store.cartItems).length
+  );
 
   return (
     <div className="m-2">
