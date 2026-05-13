@@ -6,7 +6,7 @@ import useDebounce from "hooks/useDebounce";
 import { Search } from "neetoicons";
 import { Input, NoData } from "neetoui";
 // 1. Import `without` from ramda to easily remove items from an array
-import { isEmpty, without } from "ramda";
+import { isEmpty } from "ramda";
 
 import ProductListItem from "./ProductListItem";
 
@@ -16,7 +16,6 @@ const ProductList = () => {
   const [searchKey, setSearchKey] = useState("");
 
   // 2. THE MASTER STATE: The Boss's clipboard
-  const [cartItems, setCartItems] = useState([]);
 
   const debouncedSearchKey = useDebounce(searchKey);
 
@@ -37,14 +36,6 @@ const ProductList = () => {
   }, [debouncedSearchKey]);
 
   // 3. THE WALKIE TALKIE: The function that updates the master state
-  const toggleIsInCart = (slug) => {
-    setCartItems(
-      (prevCartItems) =>
-        prevCartItems.includes(slug)
-          ? without([slug], prevCartItems) // If it's already in the cart, remove it
-          : [slug, ...prevCartItems] // If it's not in the cart, add it
-    );
-  };
 
   if (isLoading) {
     return <PageLoader />;
@@ -53,7 +44,6 @@ const ProductList = () => {
   return (
     <div className="flex h-screen flex-col">
       <Header
-        cartItemsCount={cartItems.length}
         shouldShowBackButton={false}
         title="Smile Cart"
         actionBlock={
@@ -71,13 +61,7 @@ const ProductList = () => {
       ) : (
         <div className="grid grid-cols-2 justify-items-center gap-y-8 p-4 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (
-            <ProductListItem
-              key={product.slug}
-              {...product}
-              // 5. Pass down the data and the walkie-talkie!
-              isInCart={cartItems.includes(product.slug)}
-              toggleIsInCart={() => toggleIsInCart(product.slug)}
-            />
+            <ProductListItem key={product.slug} {...product} />
           ))}
         </div>
       )}

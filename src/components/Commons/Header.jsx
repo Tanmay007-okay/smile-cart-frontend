@@ -1,17 +1,19 @@
+import { useContext } from "react"; // 1. Import useContext
+
 import { LeftArrow } from "neetoicons";
 import { Typography } from "neetoui";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useHistory } from "react-router-dom";
-// 1. Import the cart icon
 
-// 2. Add cartItemsCount to the props
-const Header = ({
-  title,
-  shouldShowBackButton = true,
-  actionBlock,
-  cartItemsCount,
-}) => {
+import CartItemsContext from "../../contexts/CartItemsContext"; // 2. Import the Context
+
+// 3. Remove cartItemsCount from the props list
+const Header = ({ title, shouldShowBackButton = true, actionBlock }) => {
   const history = useHistory();
+
+  // 4. Read the array directly from the global state!
+  const [cartItems] = useContext(CartItemsContext);
+  const cartItemsCount = cartItems.length;
 
   return (
     <div className="m-2">

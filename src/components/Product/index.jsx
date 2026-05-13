@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import productsApi from "apis/products";
 // 2. Import our newly built shared components!
 import { Header, PageLoader, PageNotFound } from "components/Commons";
+// import { AddToCart } from "components/Commons";
+import AddToCart from "components/Commons/AddToCart";
 import { Typography } from "neetoui";
 import { isNotNil, append } from "ramda";
 import { useParams } from "react-router-dom"; // 1. Import useParams to read the URL
@@ -70,6 +72,7 @@ const Product = () => {
           <Typography className="font-semibold text-green-600">
             {discountPercentage}% off
           </Typography>
+          <AddToCart slug={slug} />
         </div>
       </div>
     </div>
