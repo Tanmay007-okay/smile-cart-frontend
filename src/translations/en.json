@@ -1,4 +1,6 @@
 {
+  "title": "Smile Cart",
+  "pageTitle": "{{title}} | Smile Cart",
   "helloWorld": "Hello World",
   "buyNow": "Buy now",
   "itemCount_one": "({{count}} item)",

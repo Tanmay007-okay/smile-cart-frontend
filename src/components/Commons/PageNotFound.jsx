@@ -1,6 +1,8 @@
+import i18n from "i18next";
 import { NoData } from "neetoui";
 import { useTranslation } from "react-i18next";
 import routes from "routes";
+import withTitle from "utils/withTitle";
 
 const PageNotFound = () => {
   const { t } = useTranslation();
@@ -19,4 +21,4 @@ const PageNotFound = () => {
   );
 };
 
-export default PageNotFound;
+export default withTitle(PageNotFound, i18n.t("pageNotFound.title"));
