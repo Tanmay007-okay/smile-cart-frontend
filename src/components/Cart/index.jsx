@@ -6,6 +6,7 @@ import { MRP, OFFER_PRICE } from "components/constants";
 import { cartTotalOf } from "components/utils";
 import { NoData, Toastr } from "neetoui";
 import { keys, isEmpty } from "ramda";
+import { useTranslation } from "react-i18next";
 import useCartItemsStore from "stores/useCartItemsStore";
 
 import PriceCard from "./PriceCard";
@@ -17,7 +18,7 @@ const Cart = () => {
 
   const { cartItems, setSelectedQuantity } = useCartItemsStore.pick();
   const slugs = keys(cartItems);
-
+  const { t } = useTranslation(); // Call the hook
   const fetchCartProducts = async () => {
     try {
       const responses = await Promise.all(
@@ -54,9 +55,9 @@ const Cart = () => {
   if (isEmpty(products)) {
     return (
       <>
-        <Header title="My Cart" />
+        <Header title={t("cart.title")} /> {/* 👈 Update this! */}
         <div className="flex h-screen items-center justify-center">
-          <NoData title="Your cart is empty!" />
+          <NoData title={t("cart.empty")} /> {/* 👈 Update this! */}
         </div>
       </>
     );
@@ -67,7 +68,7 @@ const Cart = () => {
 
   return (
     <>
-      <Header title="My Cart" />
+      <Header title={t("cart.title")} />
       <div className="mt-10 flex justify-center space-x-10">
         <div className="w-1/3 space-y-5">
           {products.map((product) => (

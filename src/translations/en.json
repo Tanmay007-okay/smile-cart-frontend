@@ -1,3 +1,33 @@
 {
-  "helloWorld": "Hello World"
+  "helloWorld": "Hello World",
+  "buyNow": "Buy now",
+  "itemCount_one": "({{count}} item)",
+  "itemCount_other": "({{count}} items)",
+  "totalMrp": "Total MRP: <typography>${{mrp}}</typography>",
+  "totalDiscounts": "Total discounts: <span>${{discounts}} ({{discountPercentage}}%)</span>",
+  "offerPrice": "Total offer price: <span>${{offerPrice}}</span>",
+  "header": {
+    "searchPlaceholder": "Search products"
+  },
+  "pageNotFound": {
+    "title": "You have wandered into the unknown",
+    "description": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+    "backToHome": "Take me home"
+  },
+  "addToCart": "Add to cart",
+  "productQuantity": {
+    "reachedMax": "Reached maximum units",
+    "onlyXAvailable": "Only {{count}} units are available"
+  },
+  "cart": {
+    "title": "My Cart",
+    "empty": "Your cart is empty!"
+  },
+  "cartProductCard": {
+    "removeItem": "Remove item?",
+    "removeConfirmation": "You are removing <bold>{{name}}</bold> from cart. Do you want to continue?",
+    "yesRemove": "Yes, remove",
+    "mrp": "MRP: ${{mrp}}",
+    "offerPrice": "Offer price: ${{offerPrice}}"
+  }
 }

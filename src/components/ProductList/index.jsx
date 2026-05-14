@@ -2,27 +2,27 @@ import { useState, useEffect } from "react";
 
 import productsApi from "apis/products";
 import { Header, PageLoader } from "components/Commons";
-import useDebounce from "hooks/useDebounce";
 import { Search } from "neetoicons";
-import { Input, NoData } from "neetoui";
-// 1. Import `without` from ramda to easily remove items from an array
-import { isEmpty } from "ramda";
+import { Input } from "neetoui";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import routes from "routes";
+import { buildUrl } from "utils/url";
 
 import ProductListItem from "./ProductListItem";
 
 const ProductList = () => {
-  const [products, setProducts] = useState([]);
+  const { t } = useTranslation();
+  const history = useHistory();
+
   const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState([]);
   const [searchKey, setSearchKey] = useState("");
-
-  // 2. THE MASTER STATE: The Boss's clipboard
-
-  const debouncedSearchKey = useDebounce(searchKey);
 
   const fetchProducts = async () => {
     try {
-      const data = await productsApi.fetch({ searchTerm: debouncedSearchKey });
-      setProducts(data.products);
+      const { products } = await productsApi.fetch();
+      setProducts(products);
     } catch (error) {
       console.log("An error occurred:", error);
     } finally {
@@ -32,10 +32,7 @@ const ProductList = () => {
 
   useEffect(() => {
     fetchProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearchKey]);
-
-  // 3. THE WALKIE TALKIE: The function that updates the master state
+  }, []);
 
   if (isLoading) {
     return <PageLoader />;
@@ -43,28 +40,33 @@ const ProductList = () => {
 
   return (
     <div className="flex h-screen flex-col">
-      <Header
-        shouldShowBackButton={false}
-        title="Smile Cart"
-        actionBlock={
-          <Input
-            placeholder="Search products"
-            prefix={<Search />}
-            type="search"
-            value={searchKey}
-            onChange={(event) => setSearchKey(event.target.value)}
-          />
-        }
-      />
-      {isEmpty(products) ? (
-        <NoData className="h-full w-full" title="No products to show" />
-      ) : (
-        <div className="grid grid-cols-2 justify-items-center gap-y-8 p-4 md:grid-cols-3 lg:grid-cols-4">
-          {products.map((product) => (
-            <ProductListItem key={product.slug} {...product} />
-          ))}
-        </div>
-      )}
+      <div className="m-2">
+        <Header
+          shouldShowBackButton={false}
+          title="Smile Cart"
+          actionBlock={
+            <Input
+              placeholder={t("header.searchPlaceholder")}
+              prefix={<Search />}
+              type="search"
+              value={searchKey}
+              onChange={(e) => {
+                setSearchKey(e.target.value);
+                history.replace(
+                  buildUrl(routes.products.index, {
+                    search: e.target.value,
+                  })
+                );
+              }}
+            />
+          }
+        />
+      </div>
+      <div className="grid grid-cols-4 gap-4 p-4">
+        {products.map((product) => (
+          <ProductListItem key={product.slug} {...product} />
+        ))}
+      </div>
     </div>
   );
 };
