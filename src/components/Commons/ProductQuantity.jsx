@@ -1,6 +1,7 @@
 import { useRef } from "react";
 
 import useSelectedQuantity from "components/hooks/useSelectedQuantity";
+import { useShowProduct } from "hooks/reactQuery/useProductsApi";
 import { Button, Input, Toastr } from "neetoui";
 
 import TooltipWrapper from "./TooltipWrapper";
@@ -8,10 +9,11 @@ import TooltipWrapper from "./TooltipWrapper";
 // This regex ensures they only type numbers
 const VALID_COUNT_REGEX = /^(?:\d*|)$/;
 
-const ProductQuantity = ({ slug, availableQuantity }) => {
+const ProductQuantity = ({ slug }) => {
   const countInputFocus = useRef(null);
   const { selectedQuantity, setSelectedQuantity } = useSelectedQuantity(slug);
-
+  const { data: product = {} } = useShowProduct(slug);
+  const { availableQuantity } = product;
   // We have to parse it back into a number to do math
   const parsedSelectedQuantity = parseInt(selectedQuantity) || 0;
   const isNotValidQuantity = parsedSelectedQuantity >= availableQuantity;

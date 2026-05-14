@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-import productsApi from "apis/products";
 import { Header, PageLoader } from "components/Commons";
+import { useFetchProducts } from "hooks/reactQuery/useProductsApi";
 import { Search } from "neetoicons";
 import { Input } from "neetoui";
 import { useTranslation } from "react-i18next";
@@ -15,25 +15,12 @@ import ProductListItem from "./ProductListItem";
 const ProductList = () => {
   const { t } = useTranslation();
   const history = useHistory();
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [products, setProducts] = useState([]);
   const [searchKey, setSearchKey] = useState("");
 
-  const fetchProducts = async () => {
-    try {
-      const { products } = await productsApi.fetch();
-      setProducts(products);
-    } catch (error) {
-      console.log("An error occurred:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  // The Magic of React Query (No useQuery URL hook needed!)
+  const { data: { products = [] } = {}, isLoading } = useFetchProducts({
+    searchTerm: searchKey,
+  });
 
   if (isLoading) {
     return <PageLoader />;
