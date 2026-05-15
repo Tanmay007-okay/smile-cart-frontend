@@ -1,5 +1,4 @@
-import { isNotEmpty } from "neetocist";
-import { assoc, dissoc, evolve } from "ramda"; // Add evolve here
+import { assoc, omit } from "ramda"; // Add evolve here
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -9,17 +8,17 @@ const useCartItemsStore = create(
       cartItems: {},
       setSelectedQuantity: (slug, quantity) =>
         set(({ cartItems }) => {
-          if (quantity <= 0 && isNotEmpty(quantity)) {
-            return { cartItems: dissoc(slug, cartItems) };
+          if (quantity <= 0) {
+            return { cartItems: omit([slug], cartItems) };
           }
 
-          return { cartItems: assoc(slug, String(quantity), cartItems) };
+          return { cartItems: assoc(slug, quantity, cartItems) };
         }),
-      // Add this new function!
-      removeCartItem: (slug) => set(evolve({ cartItems: dissoc(slug) })),
+      removeCartItem: (slug) =>
+        set(({ cartItems }) => ({ cartItems: omit([slug], cartItems) })),
+      clearCart: () => set({ cartItems: {} }), // 👈 Add this line
     }),
     { name: "cart-items-store" }
   )
 );
-
 export default useCartItemsStore;
