@@ -2,33 +2,57 @@ import { useState } from "react";
 
 import { Header, PageLoader } from "components/Commons";
 import { useFetchProducts } from "hooks/reactQuery/useProductsApi";
+import useFuncDebounce from "hooks/useFuncDebounce";
+import useQueryParams from "hooks/useQueryParams";
+import { filterNonNull } from "neetocist";
 import { Search } from "neetoicons";
-import { Input, Pagination } from "neetoui"; // ✅ Import Pagination
+import { Input, Pagination } from "neetoui";
+import { mergeLeft } from "ramda";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
 import { buildUrl } from "utils/url";
 import withTitle from "utils/withTitle";
 
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from "./constants"; // ✅ Import Constants
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from "./constants";
 import ProductListItem from "./ProductListItem";
 
 const ProductList = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [searchKey, setSearchKey] = useState("");
-  const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE_INDEX); // ✅ Add page state
+  const queryParams = useQueryParams();
 
-  // ✅ Pass the pagination params to our hook
+  // 1. Initialize variables from the URL instead of default local state
+  const { page, pageSize, searchTerm = "" } = queryParams;
+  const [searchKey, setSearchKey] = useState(searchTerm);
+
   const productsParams = {
-    searchTerm: searchKey,
-    page: currentPage,
-    pageSize: DEFAULT_PAGE_SIZE,
+    searchTerm,
+    page: Number(page) || DEFAULT_PAGE_INDEX,
+    pageSize: Number(pageSize) || DEFAULT_PAGE_SIZE,
   };
 
-  // ✅ Extract totalProductsCount
   const { data: { products = [], totalProductsCount } = {}, isLoading } =
     useFetchProducts(productsParams);
+
+  // 2. Debounce the function that pushes the new URL to the browser
+  const updateQueryParams = useFuncDebounce((value) => {
+    const params = {
+      page: DEFAULT_PAGE_INDEX,
+      pageSize: DEFAULT_PAGE_SIZE,
+      searchTerm: value || null,
+    };
+
+    history.replace(buildUrl(routes.products.index, filterNonNull(params)));
+  });
+
+  const handlePageNavigation = (newPage) =>
+    history.replace(
+      buildUrl(
+        routes.products.index,
+        mergeLeft({ page: newPage, pageSize: DEFAULT_PAGE_SIZE }, queryParams)
+      )
+    );
 
   if (isLoading) {
     return <PageLoader />;
@@ -46,14 +70,9 @@ const ProductList = () => {
               prefix={<Search />}
               type="search"
               value={searchKey}
-              onChange={(e) => {
-                setSearchKey(e.target.value);
-                setCurrentPage(DEFAULT_PAGE_INDEX); // ✅ Reset to page 1 on search
-                history.replace(
-                  buildUrl(routes.products.index, {
-                    search: e.target.value,
-                  })
-                );
+              onChange={({ target: { value } }) => {
+                updateQueryParams(value); // Updates URL
+                setSearchKey(value); // Updates UI input instantly
               }}
             />
           }
@@ -65,13 +84,12 @@ const ProductList = () => {
             <ProductListItem key={product.slug} {...product} />
           ))}
         </div>
-        {/* ✅ Add the Pagination Component at the bottom */}
         <div className="mb-5 self-end pr-4">
           <Pagination
             count={totalProductsCount}
-            navigate={(page) => setCurrentPage(page)}
-            pageNo={currentPage || DEFAULT_PAGE_INDEX}
-            pageSize={DEFAULT_PAGE_SIZE}
+            navigate={handlePageNavigation}
+            pageNo={Number(page) || DEFAULT_PAGE_INDEX}
+            pageSize={Number(pageSize) || DEFAULT_PAGE_SIZE}
           />
         </div>
       </div>
