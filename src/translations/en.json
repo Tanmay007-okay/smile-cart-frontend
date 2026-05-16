@@ -15,6 +15,10 @@
     "zipCodeRequired": "Zip code is required",
     "emailInvalid": "Email address is invalid"
   },
+  "subtotal": "Subtotal <span>${{totalPrice}}</span>",
+  "totalPayablePrice": "Total Payable <span>${{totalPrice}}</span>",
+  "deliveryCharges": "Delivery charges <span>FREE</span>",
+  "saveInformationForNextTime": "Save this information for next time",
   "confirmOrder": "Confirm order",
   "error": {
     "noInternetConnection": "No Internet Connection",

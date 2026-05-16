@@ -12,9 +12,9 @@ const App = () => (
     <Route exact component={ProductList} path={routes.products.index} />
     <Route exact component={Product} path={routes.products.show} />
     <Redirect exact from={routes.root} to={routes.products.index} />
-    <Route component={PageNotFound} path="*" />
     <Route exact component={Cart} path={routes.cart} />
     <Route exact component={Checkout} path={routes.checkout} />
+    <Route component={PageNotFound} path="*" />
   </Switch>
 );
 
